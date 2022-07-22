@@ -1,6 +1,6 @@
 <h1 align='center'>Conception VHDL et simulation d'une serrure à combinaison électronique.</h1>
 
-<img src=""  class="center">
+<img src="serrure.JPG"  class="center"/img>
 
 ## Définition de VHDL
 
@@ -32,11 +32,11 @@ projet, le code est constitué de 4 chiffres qu’il faut taper sur un clavier d
 numériques connectées à la serrure. Chaque touche est connectée au codeur de la serrure
 via un fils du bus de données binaires (data_in) de 16 bits. Les connexions avec le codeur
 sont montrées sur la figure suivante :
-![The San Juan Mountains are beautiful!]()
+![figure!](figure.JPG)
 
 
 Tous les fils du bus sont au niveau bas tant qu'aucune touche n'est encore pressée. L'appui
 sur une des touches met le fil qui la relie au codeur au niveau haut tandis que les autres fils
 restent au niveau bas. La table suivante montre l’état de bus de données lors de l'appui sur
 les différentes touches du clavier.
-![The San Juan Mountains are beautiful!]()
+![Tableau!](tableau.JPG)
