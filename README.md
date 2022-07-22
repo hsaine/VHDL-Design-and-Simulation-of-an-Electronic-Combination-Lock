@@ -44,4 +44,4 @@ les différentes touches du clavier.
 
 ## L’architecture globale du circuit de la serrure
 L’architecture globale du circuit de la serrure est représentée sur la figure suivante :
- <p align="center"> <img src=".JPG" ></p> 
+ <p align="center"> <img src="architecture.JPG" ></p> 
