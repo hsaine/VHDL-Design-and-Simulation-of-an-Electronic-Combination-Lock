@@ -41,3 +41,7 @@ sur une des touches met le fil qui la relie au codeur au niveau haut tandis que 
 restent au niveau bas. La table suivante montre l’état de bus de données lors de l'appui sur
 les différentes touches du clavier.
 ![Tableau!](tableau.JPG)
+
+## L’architecture globale du circuit de la serrure
+L’architecture globale du circuit de la serrure est représentée sur la figure suivante :
+ <p align="center"> <img src=".JPG" ></p> 
