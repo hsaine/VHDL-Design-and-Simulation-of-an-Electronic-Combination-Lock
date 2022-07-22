@@ -45,3 +45,6 @@ les différentes touches du clavier.
 ## L’architecture globale du circuit de la serrure
 L’architecture globale du circuit de la serrure est représentée sur la figure suivante :
  <p align="center"> <img src="architecture.JPG" ></p> 
+ 
+## CONCLUSION
+Au terme de ce rapport qui présente les détails d’un projet d’enrichissement, on a effectué ce projet de VHDL pour la réalisation d'une serrure, en tant que des Etudiants en cycle d'ingénieur au sein de l'université Euromed de Fès. Lors de ce projet, on a pu mettre en pratique nos connaissances théoriques acquises durant notre formation à l'université. On signale que Ce projet s’est révélé très enrichissant dans la mesure où il a consisté en une approche concrète du métier d’ingénieur. En effet, la prise d’initiative, le respect des délais.
