@@ -59,6 +59,148 @@ L’architecture globale du circuit de la serrure est représentée sur la figur
 |COMPARATEUR 16 BITS  |Le rôle est de détecter l’égalité de deux valeurs codés sur 16bits en entrée. La clef de la serrure qui fera la base de comparaison (fixed_key) est fixé à 1234.    | Lorsque le code entré par l'utilisateur est égal au code de la clef, le signal ouverture passe à 1, sinon le signal ouverture reste à 0  |
 | SERRURE |    | pour modéliser toute la serrure :on fait l'appel de tous les composants le codeur, le détecteur, la mémoire et le comparateur l'instanciation de chaque composant liaison les entrés et les sorties des composants aves des signaux internes DATA_S detect codesig et les signaux externe Data-in et open |
 
+2. Code De la serrure 
+
+```
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+Entity Serrure is --entité
+port(
+DATA_in : in std_logic_vector(15 downto 0);
+CLK : in std_logic;
+RST : in std_logic;
+openn : out std_logic);
+End Serrure ;
+Architecture ARCS of Serrure is -- architecture
+component detecteur is
+port(
+Data_in: in std_logic_vector(15 downto 0);
+Detect: out std_logic);
+end component;
+component Memoire
+port(
+DATA_s : in std_logic_vector(3 downto 0);
+clk,RST,enable :in std_logic;
+code_sig : out std_logic_vector(15 downto 0));
+end component;
+
+component cmprtr16b is
+port( code_sig: in  std_logic_vector(15 downto 0);
+
+          Openn : out  std_logic );
+end component;
+
+component codeur is
+port(
+Data_in: in std_logic_vector(15 downto 0);
+Data_s: out std_logic_vector(3 downto 0));
+end component;
+
+
+--Signal CLK,RST: std_logic;
+Signal Detect: std_logic ;
+
+Signal Data_s : std_logic_vector(3 downto 0);
+signal code_sig : std_logic_vector(15 downto 0);
+
+Begin
+
+ inst_detecteur: entity work.detecteur(ARCHI_detecteur) port map(Data_in,Detect);
+ inst_codeur: entity work.codeur(ARCHI_codeur) port map(Data_in ,Data_s);
+ inst_memoire: entity work.Memoire(ARC1) port map(Data_s,CLK ,RST,Detect,code_sig);
+
+ inst_comparateur: entity work.cmprtr16b(arc16) port map(code_sig,openn);
+
+End ARCS ;
+
+```
+
+3. Banc de test du serrure
+
+
+```
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+Entity Serrure_tb is --entité
+
+End Serrure_tb ;
+Architecture ARCS_tb of Serrure_tb is -- architecture
+
+component Serrure
+port(
+DATA_in : in std_logic_vector(15 downto 0);
+CLK : in std_logic;
+RST : in std_logic;
+openn : out std_logic);
+End component;
+
+Signal CLK,RST : std_logic;
+--Signal Detect : std_logic ;
+--Signal Data_s,data_s1 : std_logic_vector(3 downto 0);
+--signal code_sig : std_logic_vector(15 downto 0);
+signal Data_in :  std_logic_vector(15 downto 0);
+signal openn :  std_logic;
+Begin
+inst:Serrure port map(DATA_in,CLK,RST ,openn);
+--Detect_process :process is
+--begin
+  -- Detect <= '1';
+   --wait for 200 ns;
+    -- Detect <= '0';
+    --wait for 1000 ns;
+  
+--end process;
+
+clock_process :process is
+begin
+     CLK <= '0';
+     wait for 10 ns;
+     CLK <= '1';
+     wait for 10 ns;
+  
+end process;
+
+process
+begin
+RST <= '0';
+DATA_IN <= "0000000000000001";
+wait for 20 ns;
+DATA_IN <= "0000000000000010";
+wait for 20 ns;
+DATA_IN <= "0000000000000100";
+wait for 20 ns;
+DATA_IN <= "0000000000010000";
+wait for 20 ns;
+
+RST <= '1';
+wait for 10 ns;
+RST <= '0';
+
+wait for 10 ns;
+RST <= '0';
+DATA_IN <= "0000000000010000";
+wait for 20 ns;
+DATA_IN <= "0000000000000100";
+wait for 20 ns;
+DATA_IN <= "0000000000000010";
+wait for 20 ns;
+DATA_IN <= "0000000000000001";
+wait for 20 ns;
+end process;
+
+End ARCS_tb ;
+```
+4. Simulation du serrure
+
+![Simulation!](Simulation.JPG)
+
+5. le code des autres composantes 
+<p>Pour le code de codeur, detecteur,memoire,registre et comparateur veuillez me contacter. </p>
 
 ## CONCLUSION
+
 Au terme de ce rapport qui présente les détails d’un projet d’enrichissement, on a effectué ce projet de VHDL pour la réalisation d'une serrure, en tant que des Etudiants en cycle d'ingénieur au sein de l'université Euromed de Fès. Lors de ce projet, on a pu mettre en pratique nos connaissances théoriques acquises durant notre formation à l'université. On signale que Ce projet s’est révélé très enrichissant dans la mesure où il a consisté en une approche concrète du métier d’ingénieur. En effet, la prise d’initiative, le respect des délais.
