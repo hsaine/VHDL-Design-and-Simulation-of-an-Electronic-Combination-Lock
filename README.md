@@ -196,7 +196,7 @@ End ARCS_tb ;
 ```
 4. Simulation du serrure
 
-![Simulation!](Simulation.JPG)
+![simulation!](simulation.JPG)
 
 5. le code des autres composantes 
 <p>Pour le code de codeur, detecteur,memoire,registre et comparateur veuillez me contacter. </p>
