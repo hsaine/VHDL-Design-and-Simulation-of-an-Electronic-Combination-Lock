@@ -46,5 +46,19 @@ les différentes touches du clavier.
 L’architecture globale du circuit de la serrure est représentée sur la figure suivante :
  <p align="center"> <img src="architecture.JPG" ></p> 
  
+## Code De projet 
+1. Explication
+
+| Composant      | Role | Explication     |
+| :----:      |    :----:   |        :----: |
+| Codeur      | Le rôle de codeur est de traduire le code généré par le clavier et transporté par le bus data_in en code binaire sur 4-bits qui sera envoyé au  système via le bus data_s.       | Le Codeur a une entrée Data_in codé sur 16 Bits et une sortie Data_s sur un 4 Bits. Chaque touche de la serrure est code sur 16 Bits alors quand l'utilisateur appui sur une touche Data_in va reçoit son code en binaire et selon le process chaque touche va transformé en 4 bits selon les transformations du tableau ci-dessus  |
+| Bascule |    |   Pour pouvoir modéliser en VHDL la mémoire, il faut Faire la description d'une bascule D modifiée active sur front montant, possédant un signal reset « RST » qui remettra à zéro de façon asynchrone la sortie Q, et une entrée Enable(detect) qui active le transfert de l’entrée vers la sortie s’il est à 1. la bascule a quatre entrés (D,CLK,RST,enable)de type Std logic et une seule sortie (Q)de type std_logique.RST: Signal qui remet à zéro d'une façon asynchrone la sortie Q.clock : pour savoir si la bascule D est active sur front montant. enable: Signal qui active le transfert de l’entrée vers la sortie s’il est à 1. |
+| Registre |    |   Pour pouvoir modéliser la mémoire, il faut aussi Réaliser un registre à Lecture/Ecriture parallèle 4 bits, à base de bascules D modifiées actives sur front montant.   |
+|  Mémoire|   Son rôle est de stocker le code saisi par l’utilisateur. Elle est constituée de 4 registres lecture/écriture parallèles 4-bits actifs sur front montant |  Quand le signal Detect passe à l'état haut, la valeur du signal présent sur la sortie du codeur (data_s) est stockée dans le premier registre et les valeurs précédentes contenues dans les autres registres sont décalées d'un registre. Le bus code_sig reçoit donc les valeurs des quatre registres. Les 4 premiers bits de ce bus représentent la valeur du premier registre qui correspondent au chiffre de la touche enfoncée en dernier.|
+| COMPARATEUR 4 BITS |Le rôle est de comparateur de 4bits est de détecter l’égalité de deux valeurs codés sur 4 bits    | Le comparateur contient deux entrés A,B codé sur 4 bitset une sortie EQU sur 1 bits.on a passé à la liste de sensibilité les deux entres A et Bla sortie sera 1 les deux nombres sont égaux     |
+|COMPARATEUR 16 BITS  |Le rôle est de détecter l’égalité de deux valeurs codés sur 16bits en entrée. La clef de la serrure qui fera la base de comparaison (fixed_key) est fixé à 1234.    | Lorsque le code entré par l'utilisateur est égal au code de la clef, le signal ouverture passe à 1, sinon le signal ouverture reste à 0  |
+| SERRURE |    | pour modéliser toute la serrure :on fait l'appel de tous les composants le codeur, le détecteur, la mémoire et le comparateur l'instanciation de chaque composant liaison les entrés et les sorties des composants aves des signaux internes DATA_S detect codesig et les signaux externe Data-in et open |
+
+
 ## CONCLUSION
 Au terme de ce rapport qui présente les détails d’un projet d’enrichissement, on a effectué ce projet de VHDL pour la réalisation d'une serrure, en tant que des Etudiants en cycle d'ingénieur au sein de l'université Euromed de Fès. Lors de ce projet, on a pu mettre en pratique nos connaissances théoriques acquises durant notre formation à l'université. On signale que Ce projet s’est révélé très enrichissant dans la mesure où il a consisté en une approche concrète du métier d’ingénieur. En effet, la prise d’initiative, le respect des délais.
