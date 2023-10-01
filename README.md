@@ -1,65 +1,66 @@
-<h1 align='center'>Conception VHDL et simulation d'une serrure à combinaison électronique.</h1>
+<h1 align='center'>VHDL Design and Simulation of an Electronic Combination Lock.</h1>
 
- <p align="center"> <img src="serrure.JPG" ></p> 
+<p align="center"> <img src="serrure.JPG" ></p> 
 
-## Définition de VHDL
+## Definition of VHDL
 
-* Le langage de description matérielle VHSIC est un langage de description matérielle qui peut modéliser le comportement et la structure des systèmes numériques à plusieurs niveaux d'abstraction, allant du niveau système jusqu'à celui des portes logiques, à des fins de saisie de conception, de documentation et de vérification.
-* L’abréviation VHDL signifie VHSIC Hardware Description Langage (VHSIC : Very High Speed Integrated Circuit). Ce langage a été écrit dans les années 70 pour fournir un langage de haut niveau adapté à la description fonctionnelle des systèmes complexes.
+* The VHSIC Hardware Description Language is a hardware description language that can model the behavior and structure of digital systems at multiple levels of abstraction, ranging from the system level down to that of logic gates, for the purposes of design entry, documentation, and verification.
+* The abbreviation VHDL stands for VHSIC Hardware Description Language (VHSIC: Very High Speed Integrated Circuit). This language was developed in the 1970s to provide a high-level language suitable for the functional description of complex systems.
 
 
-## Objectifs
-* L’objectif premier de ce projet est de modéliser en langage VHDL un circuit de serrure à combinaison électronique, et puis de valider la description élaborée en procédant à une simulation sur le logiciel Modelsim. 
-* Ce projet sera une occasion pour faire un retour sur les approches de descriptions fournies par le langage VHDL, ainsi que pour développer une bonne maitrise des différentes structures algorithmiques qui sont à la base de ces approches. 
-* Chaque description réalisée doit être obligatoirement accompagnée d’un banc de test qui la valide.
-* Chaque composant, avant qu’il soit modélisé, nécessite une recherche approfondie autour de son fonctionnement. 
+
+
+## Objectives
+* The primary objective of this project is to model an electronic combination lock circuit using VHDL language, and then validate the elaborated description by simulating it using Modelsim software.
+ 
+* This project will provide an opportunity to review the descriptions provided by the VHDL language and to develop a good understanding of the different algorithmic structures that form the basis of these approaches.
+ 
+* Each description created must be accompanied by a test bench that validates it.
+
+* Before each component is modeled, in-depth research into its operation is required.
+
 
 ## INTRODUCTION
 
-une serrure est un mécanisme fonctionnant avec une clé, permettant de bloquer une porte ou une ouverture en position fermée.
-Le projet consiste à réaliser une serrure qui composent d'un(e):
-* Codeur : son rôle est de traduire le code généré par le clavier et transporté par **le bus data_in** en code binaire sur 4-bits qui sera envoyé au système via le **bus data_s**.
-* Détecteur :son rôle est de détecter l’appui sur une touche et positionner **le signal detect à 1**. Si aucune pression sur une touche n’est détectée , **le signal de sortie est mis à 0**.
-* Mémoire :son rôle est de stocker le code saisi par l’utilisateur. Elle est constituée de **4 registres lecture/écriture parallèles 4-bits actifs
-sur front montant**. Quand le signal Detect passe à l'état haut, la valeur du signal présent sur la sortie du codeur (data_s) est stockée dans le premier registre et les valeurs précédentes contenues dans les autres registres sont décalées d'un registre. Le bus code_sig reçoit donc les valeurs des quatre registres. Les 4 premiers bits de ce bus représentent la valeur du premier registre qui correspondent au chiffre de la touche enfoncée en dernier.
-* Comparateur : son rôle est de détecter l’égalité de deux valeurs codés sur **16 bits en entrée**. La clef de la serrure qui fera la base
-de comparaison (fixed_key) est fixé à 1234. Lorsque le code entré par l'utilisateur est égal au code de la clef, le signal ouverture passe à 1, sinon le signal ouverture reste à 0. Pour élaborer la description VHDL du comparateur 16-bits, il faut tout d’abord réaliser la description d’un comparateur 4-bits et puis faire le câblage nécessaire
+A lock is a mechanism operated with a key, used to block a door or an opening in the closed position.
+The project aims to create a lock composed of:
 
-## Présentation du circuit de la serrure 
-Une serrure à combinaison électronique nécessite la composition d’un code confidentiel
-(chiffres et/ou lettres) pour être déverrouillée. Dans le cas de la serrure qui fera l’objet de ce
-projet, le code est constitué de 4 chiffres qu’il faut taper sur un clavier de 16 touches
-numériques connectées à la serrure. Chaque touche est connectée au codeur de la serrure
-via un fils du bus de données binaires (data_in) de 16 bits. Les connexions avec le codeur
-sont montrées sur la figure suivante :
+* Encoder: its role is to translate the code generated by the keyboard and transmitted through the data_in bus into a 4-bit binary code that will be sent to the system via the data_s bus.
+Detector: its role is to detect a key press and set the detect signal to 1. If no key press is detected, the output signal is set to 0.
+* Memory: its role is to store the code entered by the user. It consists of 4 parallel 4-bit read/write registers active on the rising edge. When the Detect signal goes high, the value on the encoder output (data_s) is stored in the first register, and the previous values in the other registers are shifted by one register. The code_sig bus receives the values of the four registers. The first 4 bits of this bus represent the value of the first register, corresponding to the last pressed key.
+* Comparator: its role is to detect the equality of two values coded on 16 bits as input. The key for the lock that will be used as a comparison base (fixed_key) is set to 1234. When the code entered by the user is equal to the key code, the open signal goes to 1; otherwise, the open signal remains at 0. To develop the VHDL description of the 16-bit comparator, it is necessary to first create the description of a 4-bit comparator and then make the necessary connections.
+
+## Presentation of the Lock Circuit
+
+An electronic combination lock requires the input of a confidential code (numbers and/or letters) to be unlocked. In the case of the lock that will be the subject of this project, the code consists of 4 numbers that need to be typed on a keyboard with 16 numeric keys connected to the lock. Each key is connected to the lock's encoder via a wire of the 16-bit binary data bus (data_in). The connections with the encoder are shown in the following figure:
 
  <p align="center"> <img src="figure.JPG" ></p> 
 
 
-Tous les fils du bus sont au niveau bas tant qu'aucune touche n'est encore pressée. L'appui
-sur une des touches met le fil qui la relie au codeur au niveau haut tandis que les autres fils
-restent au niveau bas. La table suivante montre l’état de bus de données lors de l'appui sur
-les différentes touches du clavier.
+All wires of the bus are at a low level as long as no key is pressed. Pressing one of the keys raises the wire connecting it to the encoder to a high level, while the other wires remain at a low level. The following table shows the state of the data bus when pressing different keys on the keyboard.
+
+
 ![Tableau!](tableau.JPG)
 
 ## L’architecture globale du circuit de la serrure
 L’architecture globale du circuit de la serrure est représentée sur la figure suivante :
  <p align="center"> <img src="architecture.JPG" ></p> 
  
-## Code De projet 
-1. Explication
+## The overall architecture of the lock circuit
+1.The overall architecture of the lock circuit is depicted in the following figure:
 
-| Composant      | Role | Explication     |
+| Component      | Role | Explanation     |
 | :----:      |    :----:   |        :----: |
-| Codeur      | Le rôle de codeur est de traduire le code généré par le clavier et transporté par le bus data_in en code binaire sur 4-bits qui sera envoyé au  système via le bus data_s.       | Le Codeur a une entrée Data_in codé sur 16 Bits et une sortie Data_s sur un 4 Bits. Chaque touche de la serrure est code sur 16 Bits alors quand l'utilisateur appui sur une touche Data_in va reçoit son code en binaire et selon le process chaque touche va transformé en 4 bits selon les transformations du tableau ci-dessus  |
-| Bascule |    |   Pour pouvoir modéliser en VHDL la mémoire, il faut Faire la description d'une bascule D modifiée active sur front montant, possédant un signal reset « RST » qui remettra à zéro de façon asynchrone la sortie Q, et une entrée Enable(detect) qui active le transfert de l’entrée vers la sortie s’il est à 1. la bascule a quatre entrés (D,CLK,RST,enable)de type Std logic et une seule sortie (Q)de type std_logique.RST: Signal qui remet à zéro d'une façon asynchrone la sortie Q.clock : pour savoir si la bascule D est active sur front montant. enable: Signal qui active le transfert de l’entrée vers la sortie s’il est à 1. |
-| Registre |    |   Pour pouvoir modéliser la mémoire, il faut aussi Réaliser un registre à Lecture/Ecriture parallèle 4 bits, à base de bascules D modifiées actives sur front montant.   |
-|  Mémoire|   Son rôle est de stocker le code saisi par l’utilisateur. Elle est constituée de 4 registres lecture/écriture parallèles 4-bits actifs sur front montant |  Quand le signal Detect passe à l'état haut, la valeur du signal présent sur la sortie du codeur (data_s) est stockée dans le premier registre et les valeurs précédentes contenues dans les autres registres sont décalées d'un registre. Le bus code_sig reçoit donc les valeurs des quatre registres. Les 4 premiers bits de ce bus représentent la valeur du premier registre qui correspondent au chiffre de la touche enfoncée en dernier.|
-| COMPARATEUR 4 BITS |Le rôle est de comparateur de 4bits est de détecter l’égalité de deux valeurs codés sur 4 bits    | Le comparateur contient deux entrés A,B codé sur 4 bitset une sortie EQU sur 1 bits.on a passé à la liste de sensibilité les deux entres A et Bla sortie sera 1 les deux nombres sont égaux     |
-|COMPARATEUR 16 BITS  |Le rôle est de détecter l’égalité de deux valeurs codés sur 16bits en entrée. La clef de la serrure qui fera la base de comparaison (fixed_key) est fixé à 1234.    | Lorsque le code entré par l'utilisateur est égal au code de la clef, le signal ouverture passe à 1, sinon le signal ouverture reste à 0  |
-| SERRURE |    | pour modéliser toute la serrure :on fait l'appel de tous les composants le codeur, le détecteur, la mémoire et le comparateur l'instanciation de chaque composant liaison les entrés et les sorties des composants aves des signaux internes DATA_S detect codesig et les signaux externe Data-in et open |
+| Encoder      | The role of the encoder is to translate the code generated by the keyboard and transmitted via the data_in bus into 4-bit binary code, which will be sent to the system via the data_s bus.       | The Encoder has a 16-bit Data_in input and a 4-bit Data_s output. Each lock key is coded on 16 bits, so when the user presses a key, Data_in receives its binary code, and according to the process, each key is transformed into 4 bits based on the transformations in the table above.  |
+| Flip-Flop |    |   To model memory in VHDL, a description of a modified D flip-flop active on rising edge is necessary. It has a reset signal "RST" that asynchronously resets the output Q and an Enable (detect) input that transfers the input to the output when it is 1. The flip-flop has four inputs (D, CLK, RST, enable) of type Std logic and a single output (Q) of type std_logic. RST: Signal that asynchronously resets the output Q. Clock: to determine if the D flip-flop is active on the rising edge. Enable: Signal that activates the transfer of the input to the output when it is 1. |
+| Register |    |   To model memory, a 4-bit parallel Read/Write register needs to be implemented, based on modified D flip-flops active on rising edge.   |
+|  Memory|   Its role is to store the code entered by the user. It consists of 4 parallel 4-bit Read/Write registers active on rising edge. |  When the Detect signal goes high, the value present on the encoder's output (data_s) is stored in the first register, and the previous values in the other registers are shifted by one register. The code_sig bus receives the values from the four registers. The first 4 bits of this bus represent the value of the first register, which corresponds to the last pressed key digit.|
+| 4-Bit Comparator |The role of the 4-bit comparator is to detect equality between two 4-bit coded values    | The comparator has two inputs A, B coded on 4 bits and one output EQU on 1 bit. A and B inputs are included in the sensitivity list. The output will be 1 if the two numbers are equal.     |
+|16-Bit Comparator  |Its role is to detect equality between two 16-bit coded input values. The lock key used for comparison (fixed_key) is set to 1234.    | When the code entered by the user matches the key code, the "open" signal goes high; otherwise, the "open" signal remains low.  |
+| LOCK |    | To model the entire lock: all components, encoder, detector, memory, and comparator are instantiated, and the inputs and outputs of the components are connected with internal signals DATA_S, detect, code_sig, and external signals Data-in and open. |
 
-2. Code De la serrure 
+
+2. Lock Code
 
 ```
 LIBRARY IEEE;
@@ -194,13 +195,13 @@ end process;
 
 End ARCS_tb ;
 ```
-4. Simulation du serrure
+4. Lock Simulation
 
 ![simulation!](simulation.JPG)
 
-5. le code des autres composantes 
-<p>Pour le code de codeur, detecteur,memoire,registre et comparateur veuillez me contacter. </p>
+5. The code for the other components
 
-## CONCLUSION
+<p>For the encoder, detector, memory, register, and comparator code, please contact me.</p>
+## Conclusion
 
-Au terme de ce rapport qui présente les détails d’un projet d’enrichissement, on a effectué ce projet de VHDL pour la réalisation d'une serrure, en tant que des Etudiants en cycle d'ingénieur au sein de l'université Euromed de Fès. Lors de ce projet, on a pu mettre en pratique nos connaissances théoriques acquises durant notre formation à l'université. On signale que Ce projet s’est révélé très enrichissant dans la mesure où il a consisté en une approche concrète du métier d’ingénieur. En effet, la prise d’initiative, le respect des délais.
+At the end of this report detailing an enrichment project, we carried out this VHDL project to create a lock, as engineering students at Euromed University of Fès. During this project, we were able to apply the theoretical knowledge acquired during our university education. It is worth noting that this project proved to be very enriching as it involved a practical approach to the engineering profession. Indeed, it required initiative and adherence to deadlines.
